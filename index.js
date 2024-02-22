@@ -7,6 +7,7 @@ async function fetchData() {
       host: 'localhost',
       user: 'root',
       password: 'password', 
+      port:"3000",
       database: 'TripEstimator',
     });
 
