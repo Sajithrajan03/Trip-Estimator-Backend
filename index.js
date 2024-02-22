@@ -1,4 +1,7 @@
 const mysql = require('mysql2/promise');
+const express = require('express');
+
+const app = express();
 
 async function fetchData() {
   try {
@@ -7,7 +10,7 @@ async function fetchData() {
       host: 'localhost',
       user: 'sajith',
       password: 'password', 
-      port:"3306",
+      port: "3306",
       database: 'TripEstimator',
     });
 
@@ -26,3 +29,14 @@ async function fetchData() {
 
 // Call the fetchData function
 fetchData();
+
+// Respond to GET request with "hi"
+app.get('/', (req, res) => {
+  res.send('hi');
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

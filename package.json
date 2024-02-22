@@ -7,9 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "SajithRajan",
-  
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "mysql2": "^3.9.1"
   }
 }
