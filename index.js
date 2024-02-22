@@ -5,9 +5,9 @@ async function fetchData() {
     // Create the connection to database
     const connection = await mysql.createConnection({
       host: 'localhost',
-      user: 'root',
+      user: 'sajith',
       password: 'password', 
-      port:"3000",
+      port:"3306",
       database: 'TripEstimator',
     });
 
