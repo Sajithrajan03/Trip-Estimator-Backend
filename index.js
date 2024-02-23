@@ -1,39 +1,32 @@
 const mysql = require('mysql2/promise');
 const express = require('express');
-
+const {db} = require('./initiateConnection.js');
 const app = express();
 
-async function fetchData() {
-  try {
-    // Create the connection to database
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'sajith',
-      password: 'password', 
-      port: "3306",
-      database: 'TripEstimator',
-    });
-
-    // A simple SELECT query
-    const [results, fields] = await connection.query('SELECT * FROM sample;');
-
-    console.log(results); // results contains rows returned by server
-    console.log(fields); // fields contains extra meta data about results, if available
-
-    // Close the connection
-    await connection.end();
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-// Call the fetchData function
-fetchData();
-
 // Respond to GET request with "hi"
-app.get('/', (req, res) => {
-  res.send('hi');
+app.get("/test",(req,res)=>{
+  res.status(200).send("The server is good")
+})
+app.get('/',async (req, res) => {
+  let db_connection = await db.promise().getConnection();
+  try{
+  const x = db_connection.query('SELECT * FROM sample;');
+  x.then(function(result){
+    console.log(result)
+    res.send(result)
+  })
+  }
+  catch{}
+  finally{
+     
+     db_connection.release();
+  }
+
 });
+app.get("/hi",(req,res)=>{
+  console.log(req)
+  res.send("this is fun")
+})
 
 // Start the server
 const PORT = 3000;
