@@ -1,28 +1,12 @@
-const mysql = require('mysql2/promise');
+ 
 const express = require('express');
-const {db} = require('./initiateConnection.js');
+const {db} = require('./connection.js');
 const app = express();
-
+const userWebRouter = require("./routes/userWeb.js")
 // Respond to GET request with "hi"
-app.get("/test",(req,res)=>{
-  res.status(200).send("The server is good")
-})
-app.get('/',async (req, res) => {
-  let db_connection = await db.promise().getConnection();
-  try{
-  const x = db_connection.query('SELECT * FROM sample;');
-  x.then(function(result){
-    console.log(result)
-    res.send(result)
-  })
-  }
-  catch{}
-  finally{
-     
-     db_connection.release();
-  }
+app.use(express.json());
+app.use("/api",userWebRouter)
 
-});
 app.get("/hi",(req,res)=>{
   console.log(req)
   res.send("this is fun")
