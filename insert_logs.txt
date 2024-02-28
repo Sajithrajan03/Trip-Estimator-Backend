@@ -1,3 +1,8 @@
 INSERT INTO sample (name, age) VALUES  ( San,223);
 INSERT INTO sample (name, age) VALUES  ( "Sartr",33);
 INSERT INTO sample (name, age) VALUES  ( "guru",58);
+INSERT INTO hotel (hotelName,hotelAddress,standardRate,deluxeRate,suiteRate) VALUES ("Sajith","sadf","1","32","12");
+INSERT INTO hotel (hotelName,hotelAddress,standardRate,deluxeRate,suiteRate) VALUES ("Sajisdfth","sadf","1","32","12");
+INSERT INTO hotel (hotelName,hotelAddress,standardRate,deluxeRate,suiteRate) VALUES ("guru","sadf","123","2343","12");
+INSERT INTO hotel (hotelName,hotelAddress,standardRate,deluxeRate,suiteRate) VALUES ("saravak","sadf","123","2343","12");
+INSERT INTO hotel (hotelName,hotelAddress,standardRate,deluxeRate,suiteRate) VALUES ("suku","sadf","123","2343","12");
