@@ -1,0 +1,1 @@
+INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("add", 1, 123, 1232, 123);

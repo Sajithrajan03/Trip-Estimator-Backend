@@ -1,0 +1,2 @@
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sasdf", "adf", 1, 3, 12, 1232, 234);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sasdf", "adf", 1, 3, 12, 1232, 234);

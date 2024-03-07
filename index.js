@@ -7,10 +7,7 @@ const userWebRouter = require("./routes/userWeb.js")
 app.use(express.json());
 app.use("/api",userWebRouter)
 
-app.get("/hi",(req,res)=>{
-  console.log(req)
-  res.send("this is fun")
-})
+
 
 // Start the server
 const PORT = 3000;

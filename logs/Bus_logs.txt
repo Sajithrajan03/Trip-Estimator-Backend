@@ -1,0 +1,1 @@
+INSERT INTO bus_info (bus_name, bus_route, bus_ac, bus_sleeper, bus_price) VALUES ("A3u1 2", 1, 1, 1, 1800);
