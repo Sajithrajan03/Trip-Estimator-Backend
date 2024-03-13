@@ -1,0 +1,2 @@
+INSERT INTO car_travel_info (car_name, car_route, car_price) VALUES ("asdf", 1, 123);
+INSERT INTO car_travel_info (car_name, car_route, car_price) VALUES ("asdf", 1, 123);
