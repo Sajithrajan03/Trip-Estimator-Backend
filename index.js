@@ -1,9 +1,11 @@
- 
 const express = require('express');
 const {db} = require('./connection.js');
+const jwt = require("jsonwebtoken")
 const app = express();
 const userWebRouter = require("./routes/userWeb.js")
 const cors = require('cors');
+require('dotenv').config();
+
 // Respond to GET request with "hi"
 app.use(cors())
 app.use(express.json());
