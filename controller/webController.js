@@ -1,4 +1,5 @@
 const {db} =  require("../connection")
+const webTokenGenerator = require('../middleware/webTokenGenerator');
 const fs = require('fs');
 const path = require('path');
 

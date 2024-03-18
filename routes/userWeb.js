@@ -2,8 +2,8 @@ const express =  require("express")
 const router = express.Router()
 const webController = require("../controller/webController")
 const authController = require("../controller/AuthController")
-router.post("/login",authController.login)
-router.get('/test',authController.authenticateToken, webController.test);
+router.post("/login",authController.userlogin)
+router.get('/test', webController.test);
 router.post('/registerHotelData', webController.registerHotelData);
 router.get('/getHotelData', webController.getHotelData);
 router.post('/registerFlightData', webController.registerFlightData);
