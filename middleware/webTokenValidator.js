@@ -18,11 +18,14 @@ async function tokenValidator(req, res, next) {
         const payLoad = await verify(token, public_key);
         if (payLoad["secret_key"] == secret_key) {
 
-            req.authorization_tier = payLoad["userRole"];
+            req.authorization_tier = payLoad["accountStatus"];
             req.body.userEmail = payLoad["userEmail"];
-            req.body.userRole = payLoad["userRole"];
-
+            req.body.userName = payLoad["userName"];
+            req.body.userGender = payLoad["userGender"];
+            req.body.accountStatus = payLoad["accountStatus"];
+            
             next();
+            
             return;
         } else {
             res.status(401).send({

@@ -65,3 +65,5 @@ INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hot
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("kjsd", "kll", 1, 3, 9, 9, 9);
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("kjsd", "kll", 1, 3, 9, 9, 9);
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("kkk", "ks", 2, 4, 9, 9, 9);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sdfsd", "adf", 1, 3, 12, 1232, 234);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sdfsd", "adf", 1, 3, 12, 1232, 234);
