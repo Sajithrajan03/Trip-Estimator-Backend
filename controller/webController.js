@@ -38,7 +38,7 @@ module.exports={
         try{
             let db_connection = await db.promise().getConnection();
     
-            // Check if the connection is successful
+            // Check if the connectiston is successful
             if (!db_connection) {
                 return res.status(500).send({"Message": "Failed to establish database connection"});
             }
