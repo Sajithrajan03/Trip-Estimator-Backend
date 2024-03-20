@@ -1,12 +1,13 @@
 const express =  require("express")
 const router = express.Router()
-const webController = require("../controller/webController")
-const webController2 = require("../controller/webController_2")
+const webController = require("../controller/webDataController")
+const webController2 = require("../controller/webController")
 const authController = require("../controller/AuthController")
 router.post("/login",authController.userlogin)
 router.post("/validateLogin",authController.uservalidation)
 
 router.post("/registerUserData",webController2.registerUserData)
+router.get("/getAverages",webController2.getAverages)
 
 router.get('/test', webController.test);
 router.post('/registerHotelData', webController.registerHotelData);

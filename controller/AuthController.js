@@ -6,12 +6,13 @@ const path = require('path');
 
 module.exports ={
     userlogin: async (req,res)=> {
+
             const secret_token = await webTokenGenerator({
                 "userEmail": req.body.userEmail,
                 "userName" : req.body.userName,
                 // "userGender" : req.body.userGender,
                 "userGender" : "M",
-                "accountStatus" : 1
+                "accountStatus" : "1"
 
         })
         return res.status(200).send({

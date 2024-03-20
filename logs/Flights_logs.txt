@@ -1,1 +1,7 @@
 INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("add", 1, 123, 1232, 123);
+INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("aasdfd", 2, 123, 1232, 123);
+INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("aasdfd", 3, 123, 1232, 123);
+INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("aasdfd", 4, 123, 1232, 123);
+INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("aasdfd", 6, 123, 1232, 123);
+INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("aasdfd", 9, 123, 1232, 123);
+INSERT INTO flight_info (flight_name, flight_route, flight_economy_price, flight_premium_price, flight_business_class_price) VALUES ("aasdfd", 10, 123, 1232, 123);

@@ -89,7 +89,11 @@ module.exports={
             return res.status(200).send({"Message": "Flight data registered successfully"});
         } catch (error) {
             console.error("Error executing query:", error);
-            return res.status(500).send("Internal Server Error");
+            if (error.code === 'ER_DUP_ENTRY') {
+                return res.status(400).send({"Message": "Duplicate entry detected"});
+            } else {
+                return res.status(500).send({"Message": "Internal server error"});
+            }
         }
     },
     
@@ -126,8 +130,11 @@ module.exports={
             db_connection.release(); 
             return res.status(200).send({"Message": "City data registered successfully"});
         } catch (error) {
-            console.error("Error executing query:", error);
-            return res.status(500).send("Internal Server Error");
+            if (error.code === 'ER_DUP_ENTRY') {
+                return res.status(400).send({"Message": "Duplicate entry detected"});
+            } else {
+                return res.status(500).send({"Message": "Internal server error"});
+            }
         }
     },
     
@@ -148,8 +155,11 @@ module.exports={
             db_connection.release(); 
             return res.status(200).send({"Message": "Route data registered successfully"});
         } catch (error) {
-            console.error("Error executing query:", error);
-            return res.status(500).send("Internal Server Error");
+            if (error.code === 'ER_DUP_ENTRY') {
+                return res.status(400).send({"Message": "Duplicate entry detected"});
+            } else {
+                return res.status(500).send({"Message": "Internal server error"});
+            }
         }
     },
     
@@ -159,14 +169,23 @@ module.exports={
             
             const busInfo = req.body;
         
-            // Check if BusName is provided
-            if (!busInfo.busName) {
-                return res.status(400).send({"Message": "The BusName is missing"});
+            // Check if busName, busFrom, and busTo are provided
+            if (!busInfo.busName || !busInfo.busFrom || !busInfo.busTo) {
+                return res.status(400).send({"Message": "BusName, busFrom, or busTo is missing"});
             }
-            console.log(busInfo)
-            // Fetch route_id based on route_start_city and route_end_city
-            const [rows] = await db_connection.query('SELECT route_id FROM route_info WHERE route_start_city = ? AND route_end_city = ?', [parseInt(busInfo.busFrom,10), parseInt(busInfo.busTo,10)]);
-            console.log(parseInt(busInfo.busFrom,10), parseInt(busInfo.busTo,10))
+            
+            // Parse busFrom and busTo as integers
+            const busFrom = parseInt(busInfo.busFrom, 10);
+            const busTo = parseInt(busInfo.busTo, 10);
+            
+            // Check if busFrom and busTo are valid integers
+            if (isNaN(busFrom) || isNaN(busTo)) {
+                return res.status(400).send({"Message": "Invalid busFrom or busTo value"});
+            }
+            
+            // Fetch route_id based on busFrom and busTo
+            const [rows] = await db_connection.query('SELECT route_id FROM route_info WHERE route_start_city = ? AND route_end_city = ?', [busFrom, busTo]);
+            
             // Check if route is found
             if (rows.length === 0) {
                 return res.status(404).send({"Message": "Route not found"});
@@ -186,11 +205,14 @@ module.exports={
             // Send success response
             return res.status(200).send({"Message": "Bus data registered successfully"});
         } catch (error) {
-            console.error("Error executing query:", error);
-            return res.status(500).send("Internal Server Error");
+            if (error.code === 'ER_DUP_ENTRY') {
+                return res.status(400).send({"Message": "Duplicate entry detected"});
+            } else {
+                return res.status(500).send({"Message": "Internal server error"});
+            }
         }
-        
     },
+    
     
     getCityData: async (req, res) => {
         try {
@@ -295,8 +317,11 @@ module.exports={
             db_connection.release(); 
             return res.status(200).send({"Message": "Car data registered successfully"});
         } catch (error) {
-            console.error("Error executing query:", error);
-            return res.status(500).send("Internal Server Error");
+            if (error.code === 'ER_DUP_ENTRY') {
+                return res.status(400).send({"Message": "Duplicate entry detected"});
+            } else {
+                return res.status(500).send({"Message": "Internal server error"});
+            }
         }
     },
     
