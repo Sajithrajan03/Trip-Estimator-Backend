@@ -7,23 +7,64 @@ const path = require('path');
 module.exports ={
     userlogin: async (req,res)=> {
 
-            const secret_token = await webTokenGenerator({
-                "userEmail": req.body.userEmail,
-                "userName" : req.body.userName,
-                // "userGender" : req.body.userGender,
-                "userGender" : "M",
-                "accountStatus" : "1"
+            if (req.body.userEmail == null ||req.body.userEmail==undefined || req.body.userEmail == ""|| req.body.userPass == null||req.body.userPass==undefined || req.body.userPass == "" ){
+                    return res.status(400).send({"Message":"Bad Request"})
+            }
 
-        })
-        return res.status(200).send({
-            "Message":"Logged IN",
-            "SECRET_TOKEN" : secret_token,
-             
-        })
+            let db_connection = await db.promise().getConnection();
+
+            try{
+                await db_connection.query(`LOCK TABLES employee_info READ`);
+        
+                const [employee] = await db_connection.query(
+                    `SELECT * from employee_info
+                    WHERE emp_email = ? and emp_password = ?;`,
+                    [req.body.userEmail, req.body.userPass]
+                );
+            
+                if (employee.length > 0){
+                    if (employee[0].emp_status===0){
+                        await db_connection.query('UNLOCK TABLES');
+                return res.status(401).send({
+                    "Message":"Your Account has been deactivated. "})
+                    }
+                
+                const secret_token = await webTokenGenerator({
+                    "userEmail": req.body.userEmail,
+                    "userName" : employee[0].emp_name,
+                    "userGender" :employee[0].emp_gender,
+                    "accountStatus" : employee[0].emp_status
+
+                })
+                await db_connection.query('UNLOCK TABLES');
+                return res.status(200).send({
+                    "Message":"Logged IN",
+                    "SECRET_TOKEN" : secret_token,
+                    "userEmail": req.body.userEmail,
+                    "userName" : employee[0].emp_name,
+                    "userGender" :employee[0].emp_gender,
+                    "accountStatus" : employee[0].emp_status
+
+                    
+                })
+                }
+                await db_connection.query(`UNLOCK TABLES`);
+
+                return res.status(400).send({ "message": "Invalid email or password!" });
+                }
+                catch(err){
+                        console.log(err)
+                }
+                finally {
+                    await db_connection.query(`UNLOCK TABLES`);
+                    db_connection.release();
+                }
+                
+            
     },
     uservalidation: [webTokenValidator ,async (req,res,next)=>{
-        console.log(req.body,req.body.userRole,req.body.userEmail)
-        if (req.body.userRole === null || req.body.userRole === undefined || req.body.userRole === "" || req.body.userEmail === null || req.body.userEmail === undefined || req.body.userEmail === ""  || req.body.userRole !== '1') {
+         
+        if (req.body.userName === null || req.body.userName === undefined || req.body.userName === "" || req.body.userEmail === null || req.body.userEmail === undefined || req.body.userEmail === ""  || req.body.accountStatus === '0') {
             return res.status(400).send({ "message": "Access Restricted!" });
         }
         res.status(200).send({"Message":"You are authorised."})
