@@ -8,6 +8,9 @@ router.post("/validateLogin",authController.uservalidation)
 
 router.post("/registerUserData",webController2.registerUserData)
 router.get("/getAverages",webController2.getAverages)
+router.post("/enterTripDetails",webController2.enterTripDetails)
+router.get("/getDashboardDetails",webController2.getDashboardDetails)
+router.post("/updateTripDetails",webController2.updateTripDetails)
 
 router.get('/test', webController.test);
 router.post('/registerHotelData', webController.registerHotelData);

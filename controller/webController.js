@@ -65,12 +65,19 @@ module.exports={
                 [startCityInt, endCityInt]
             );
     
-            const busAvg = busAvg_prices.map(subArray => {
+            const busAvg_arr = busAvg_prices.map(subArray => {
                 return subArray.map(item => {
+                    
                     return item.avg_price;
                 });
             });
-    
+            
+            const busAvg = { 
+              "noac_nosleeper":  busAvg_arr[0][0],
+              "noac_sleeper":  busAvg_arr[0][0],
+              "ac_nosleeper":  busAvg_arr[0][0],
+              "ac_sleeper":  busAvg_arr[0][0],
+            }
             await db_connection.query(`UNLOCK TABLES`);
     
             await db_connection.query(`LOCK TABLES flight_info READ, route_info READ`);
@@ -158,7 +165,7 @@ module.exports={
                  GROUP BY train_route;`,
                 [startCityInt, endCityInt]
             );
-
+            console.log(trainAvg_prices)
             const trainAvg = trainAvg_prices.map(subArray => {
                 return subArray.map(item => {
                     return {
@@ -183,7 +190,7 @@ module.exports={
     
             return res.status(200).send({
                 "Message": {
-                    "busPrice": busAvg[0],
+                    "busPrice": busAvg,
                     "carPrice": carAvg[0],
                     "trainPrice": trainAvg[0],
                     "flightPrice": {
@@ -202,7 +209,138 @@ module.exports={
             console.error(err);
             return res.status(500).send({ "Message": "Internal Server Error" });
         }
-    }]
+    }],
+    
+    enterTripDetails: [
+        webTokenValidator,
+        async (req, res) => {
+            try {
+                
+                const requiredFields = ["emp_email", "travel_start_date", "travel_end_date", "transport_mode", "transport_estimate", "transport_amount", "hotel_type", "hotel_estimate", "hotel_amount", "food_estimate", "food_amount", "miscellaneous_estimate", "miscellaneous_amount", "total_estimate", "total_amount", "travel_reason", "trip_estimate", "trip_amount"];
+                for (const field of requiredFields) {
+                    if (!req.body[field]) {
+                        return res.status(400).send({ "Message": `${field.replace('_', ' ')} is required` });
+                    }
+                }
+    
+                let db_connection = await db.promise().getConnection();
+    
+                if (!db_connection) {
+                    return res.status(500).send({ "Message": "Failed to establish database connection" });
+                }
+    
+                if (req.body.authorization_tier === "0" || req.body.authorization_tier === "2") {
+                    return res.status(401).send({ "Message": "Unauthorized" });
+                }
+                const [employeeRow] = await db_connection.query('SELECT emp_id FROM employee_info WHERE emp_email = ?', [req.body.emp_email]);
+
+                if (employeeRow.length === 0) {
+                    return res.status(401).send({ "Message": "Unauthorized" });
+                }
+
+                const emp_id = employeeRow[0].emp_id;
+                
+                // Insert trip details
+                await db_connection.query(`INSERT INTO trip_info (emp_id, start_city, end_city, travel_start_date, travel_end_date, transport_mode, transport_estimate, transport_amount, hotel_type, hotel_estimate, hotel_amount, food_estimate, food_amount, miscellaneous_estimate, miscellaneous_amount, total_estimate, total_amount, travel_reason, trip_status, trip_estimate, trip_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                    [
+                        emp_id, req.body.start_city, req.body.end_city, req.body.travel_start_date, req.body.travel_end_date,
+                        req.body.transport_mode, req.body.transport_estimate, req.body.transport_amount, req.body.hotel_type,
+                        req.body.hotel_estimate, req.body.hotel_amount, req.body.food_estimate, req.body.food_amount,
+                        req.body.miscellaneous_estimate, req.body.miscellaneous_amount, req.body.total_estimate,
+                        req.body.total_amount, req.body.travel_reason, 0,
+                        req.body.trip_estimate, req.body.trip_amount
+                    ]);
+    
+                db_connection.release();
+    
+                return res.status(200).send({
+                    "Message": "Trip details added successfully!"
+                });
+            } catch (err) {
+                console.error(err);
+                return res.status(500).send({ "Message": "Internal Server Error" });
+            }
+        }
+    ],
+    getDashboardDetails: [
+        webTokenValidator,
+        async (req, res) => {
+            try {
+                let db_connection = await db.promise().getConnection();
+    
+                if (!db_connection) {
+                    return res.status(500).send({ "Message": "Failed to establish database connection" });
+                }
+    
+                if (req.body.authorization_tier === "0" || req.body.authorization_tier === "2") {
+                    return res.status(401).send({ "Message": "Unauthorized" });
+                }
+    
+                // Retrieve all trip details
+                const tripDetails = await db_connection.query(`SELECT * FROM trip_info`);
+    
+                db_connection.release();
+    
+                return res.status(200).send({
+                    "Message": tripDetails[0]
+                });
+            } catch (err) {
+                console.error(err);
+                return res.status(500).send({ "Message": "Internal Server Error" });
+            }
+        }
+    ],
+    updateTripDetails: [
+        webTokenValidator,
+        async (req, res) => {
+            try {
+                const requiredFields = ["trip_id", "trip_status", "trip_amount", "admin_message"];
+            for (const field of requiredFields) {
+                if (!req.body[field]) {
+                    return res.status(400).send({ "Message": `${field.replace('_', ' ')} is required` });
+                }
+            }
+
+             
+                const { trip_id, trip_status, trip_amount, admin_message } = req.body;
+
+                
+    
+                let db_connection = await db.promise().getConnection();
+    
+                if (!db_connection) {
+                    return res.status(500).send({ "Message": "Failed to establish database connection" });
+                }
+    
+                if (req.body.accountStatus == "0" || req.body.accountStatus == "1") {
+                    return res.status(401).send({ "Message": "Unauthorized" });
+                }
+    
+                // Check if the trip exists
+                const [tripExists] = await db_connection.query('SELECT * FROM trip_info WHERE trip_id = ?', [trip_id]);
+    
+                if (tripExists.length === 0) {
+                    return res.status(404).send({ "Message": "Trip not found" });
+                }
+    
+                // Update trip details
+                await db_connection.query(`UPDATE trip_info SET trip_status = ?, trip_amount = ?, admin_message = ? WHERE trip_id = ?`,
+                    [trip_status, trip_amount, admin_message, trip_id]);
+    
+                db_connection.release();
+    
+                return res.status(200).send({
+                    "Message": "Trip details updated successfully!"
+                });
+            } catch (err) {
+                console.error(err);
+                return res.status(500).send({ "Message": "Internal Server Error" });
+            }
+        }
+    ]
+    
+    
+    
     
     
     
