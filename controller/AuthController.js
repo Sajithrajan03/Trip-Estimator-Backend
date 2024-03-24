@@ -23,10 +23,10 @@ module.exports ={
                 );
             
                 if (employee.length > 0){
-                    if (employee[0].emp_status===0){
+                    if (employee[0].emp_status==0){
                         await db_connection.query('UNLOCK TABLES');
-                return res.status(401).send({
-                    "Message":"Your Account has been deactivated. "})
+                            return res.status(401).send({
+                                "Message":"Your Account has been deactivated. "})
                     }
                 
                 const secret_token = await webTokenGenerator({
@@ -50,7 +50,7 @@ module.exports ={
                 }
                 await db_connection.query(`UNLOCK TABLES`);
 
-                return res.status(400).send({ "message": "Invalid email or password!" });
+                return res.status(400).send({ "Message": "Invalid email or password!" });
                 }
                 catch(err){
                         console.log(err)
@@ -65,7 +65,7 @@ module.exports ={
     uservalidation: [webTokenValidator ,async (req,res,next)=>{
          
         if (req.body.userName === null || req.body.userName === undefined || req.body.userName === "" || req.body.userEmail === null || req.body.userEmail === undefined || req.body.userEmail === ""  || req.body.accountStatus === '0') {
-            return res.status(400).send({ "message": "Access Restricted!" });
+            return res.status(400).send({ "Message": "Access Restricted!" });
         }
         res.status(200).send({"Message":"You are authorised."})
         
