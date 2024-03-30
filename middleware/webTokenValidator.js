@@ -34,8 +34,10 @@ async function tokenValidator(req, res, next) {
             return;
         }
     } catch (err) {
+         
         res.status(401).send({
-            "ERROR": "Unauthorized access. Warning."
+            "ERROR": "Unauthorized access. Warning.",
+            "err" : err
         });
         return;
     }

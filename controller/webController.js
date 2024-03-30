@@ -276,13 +276,27 @@ module.exports={
                     return res.status(401).send({ "Message": "Unauthorized" });
                 }
     
-                // Retrieve all trip details
-                const tripDetails = await db_connection.query(`SELECT * FROM trip_info`);
+                // Retrieve all trip details along with employee names and city names
+                const tripDetails = await db_connection.query(`
+                    SELECT 
+                        trip_info.*, 
+                        employee_info.emp_name, 
+                        start_city.city_name AS start_city_name, 
+                        end_city.city_name AS end_city_name
+                    FROM 
+                        trip_info
+                    JOIN 
+                        employee_info ON trip_info.emp_id = employee_info.emp_id
+                    JOIN 
+                        cities AS start_city ON trip_info.start_city = start_city.city_id
+                    JOIN 
+                        cities AS end_city ON trip_info.end_city = end_city.city_id
+                `);
     
                 db_connection.release();
     
                 return res.status(200).send({
-                    "Message": tripDetails[0]
+                    "Message": tripDetails[0] 
                 });
             } catch (err) {
                 console.error(err);
@@ -290,6 +304,8 @@ module.exports={
             }
         }
     ],
+    
+    
     updateTripDetails: [
         webTokenValidator,
         async (req, res) => {
@@ -318,7 +334,7 @@ module.exports={
     
                 // Check if the trip exists
                 const [tripExists] = await db_connection.query('SELECT * FROM trip_info WHERE trip_id = ?', [trip_id]);
-    
+                
                 if (tripExists.length === 0) {
                     return res.status(404).send({ "Message": "Trip not found" });
                 }

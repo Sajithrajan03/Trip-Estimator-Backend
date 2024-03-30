@@ -1,0 +1,65 @@
+INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 2);
+INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 3);
+INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 1);
+			
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 2);
+			
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 3);
+			
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 4);
+			
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 5);
+			
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 1);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 2);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 3);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 4);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (6, 5);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (1, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (2, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (3, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (4, 6);
+			INSERT INTO route_info (route_start_city, route_end_city) VALUES (5, 6);
