@@ -14,6 +14,7 @@ const runSQL = async () => {
                 console.error(`[ERROR]: ${error.message}`);
             }
         }
+        return; // Stop the function here
     } catch (err) {
         console.error(`[ERROR]: ${err.message}`);
     }

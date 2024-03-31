@@ -15,35 +15,35 @@ module.exports={
     
             const busInfo = req.body;
     
-            if (!busInfo.busName || !busInfo.busFrom || !busInfo.busTo) {
-                return res.status(400).send({"Message": "BusName, busFrom, or busTo is missing"});
+            if (!busInfo.busName || !busInfo.busRoute ) {
+                return res.status(400).send({"Message": "BusName, route is missing"});
             }
     
-            const busFrom = parseInt(busInfo.busFrom, 10);
-            const busTo = parseInt(busInfo.busTo, 10);
+            // const busFrom = parseInt(busInfo.busFrom, 10);
+            // const busTo = parseInt(busInfo.busTo, 10);
     
-            if (isNaN(busFrom) || isNaN(busTo)) {
-                return res.status(400).send({"Message": "Invalid busFrom or busTo value"});
-            }
+            // if (isNaN(busFrom) || isNaN(busTo)) {
+            //     return res.status(400).send({"Message": "Invalid busFrom or busTo value"});
+            // }
     
-            const [rows] = await db_connection.query('SELECT route_id FROM route_info WHERE route_start_city = ? AND route_end_city = ?', [busFrom, busTo]);
+            // const [rows] = await db_connection.query('SELECT route_id FROM route_info WHERE route_start_city = ? AND route_end_city = ?', [busFrom, busTo]);
     
-            if (rows.length === 0) {
-                return res.status(404).send({"Message": "Route not found"});
-            }
+            // if (rows.length === 0) {
+            //     return res.status(404).send({"Message": "Route not found"});
+            // }
     
-            const routeId = rows[0].route_id;
+            // const routeId = rows[0].route_id;
     
             const insertStatement = `INSERT INTO bus_info (bus_name, bus_route, bus_ac, bus_sleeper, bus_price) VALUES (?, ?, ?, ?, ?)`;
     
-            await db_connection.query(insertStatement, [busInfo.busName, routeId, busInfo.busAc, busInfo.busSleeper, busInfo.busPrice]);
+            await db_connection.query(insertStatement, [busInfo.busName, busInfo.busRoute, busInfo.busAc, busInfo.busSleeper, busInfo.busPrice]);
     
             return res.status(200).send({"Message": "Bus data registered successfully"});
         } catch (error) {
             if (error.code === 'ER_DUP_ENTRY') {
                 return res.status(400).send({"Message": "Duplicate entry detected"});
             } else {
-                return res.status(500).send({"Message": "Internal server error"});
+                return res.status(500).send({"Message": error.code});
             }
         } finally {
             if (db_connection) {

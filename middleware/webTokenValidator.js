@@ -37,7 +37,7 @@ async function tokenValidator(req, res, next) {
          
         res.status(401).send({
             "ERROR": "Unauthorized access. Warning.",
-            "err" : err
+             
         });
         return;
     }

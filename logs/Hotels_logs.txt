@@ -2,3 +2,11 @@ INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hot
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sajith", "", 2, 4, 1, 2, 3);
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sajith", "asdf", 2, 4, 1, 2, 3);
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sajith", "asdf", 2, 4, 1, 2, 3);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sdfsd", "adf", 2, 3, 12, 1232, 234);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sdfs", "adf", 2, 4, 12, 1232, 234);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sdfs", "adf", 2, 5, 12, 1232, 234);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sdfsw", "adf", 2, 5, 12, 1232, 234);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sk hotel", "goundampalayam", 1, 5, 1230, 2345, 5678);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sk hotel", "goundampalayam", 1, 5, 1230, 2345, 5678);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sk hotel", "goundampalayam", 1, 5, 1230, 2345, 5678);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("samya hotel", "goundampalayam", 1, 5, 1230, 2345, 5678);
