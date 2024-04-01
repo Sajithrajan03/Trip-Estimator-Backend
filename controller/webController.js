@@ -108,42 +108,43 @@ module.exports = {
                  GROUP BY flight_route;`,
                 [startCityInt, endCityInt]
             );
-            const flightAvg_prices2 = await db_connection.query(
-                `SELECT 
-                AVG(total_avg_price) AS avg_flight_price
-            FROM (
-                SELECT 
-                    (
-                        COALESCE(flight_economy_price, 0) +
-                        COALESCE(flight_premium_price, 0) +
-                        COALESCE(flight_business_class_price, 0)
-                    ) / NULLIF(
-                        GREATEST(
-                            IF(flight_economy_price IS NOT NULL, 1, 0),
-                            IF(flight_premium_price IS NOT NULL, 1, 0),
-                            IF(flight_business_class_price IS NOT NULL, 1, 0)
-                        ),
-                        0
-                    ) AS total_avg_price
-                FROM 
-                    flight_info
-                WHERE 
-                    flight_route IN (
-                        SELECT route_id 
-                        FROM route_info 
-                        WHERE route_start_city = ? AND route_end_city = ?
-                    )
-            ) AS avg_prices;
+            // const flightAvg_prices2 = await db_connection.query(
+            //     `SELECT 
+            //     AVG(total_avg_price) AS avg_flight_price
+            // FROM (
+            //     SELECT 
+            //         (
+            //             COALESCE(flight_economy_price, 0) +
+            //             COALESCE(flight_premium_price, 0) +
+            //             COALESCE(flight_business_class_price, 0)
+            //         ) / NULLIF(
+            //             GREATEST(
+            //                 IF(flight_economy_price IS NOT NULL, 1, 0),
+            //                 IF(flight_premium_price IS NOT NULL, 1, 0),
+            //                 IF(flight_business_class_price IS NOT NULL, 1, 0)
+            //             ),
+            //             0
+            //         ) AS total_avg_price
+            //     FROM 
+            //         flight_info
+            //     WHERE 
+            //         flight_route IN (
+            //             SELECT route_id 
+            //             FROM route_info 
+            //             WHERE route_start_city = ? AND route_end_city = ?
+            //         )
+            // ) AS avg_prices;
             
-                `,
-                [startCityInt, endCityInt]
-            );
+            //     `,
+            //     [startCityInt, endCityInt]
+            // );
             
-
+            
             const flightAvg = flightAvg_prices[0].length > 0 ? Object.values((flightAvg_prices[0])[0]) : [null, null, null]
-
-            const [avg_economy_price, avg_premium_price, avg_business_price] = flightAvg;
             
+            const [avg_economy_price, avg_premium_price, avg_business_price] = flightAvg;
+            const flightAvg_prices2 = (parseInt(avg_economy_price) +  parseInt(avg_premium_price) + parseInt(avg_business_price))/3
+            console.log(typeof avg_economy_price,avg_premium_price,flightAvg_prices2)
             
             await db_connection.query(`UNLOCK TABLES`);
             await db_connection.query(`LOCK TABLES hotel_info READ`);
@@ -293,7 +294,7 @@ module.exports = {
                         "economy": avg_economy_price,
                         "premium": avg_premium_price,
                         "business": avg_business_price,
-                        "flightAverage" : flightAvg_prices2[0][0].avg_flight_price
+                        "flightAverage" : flightAvg_prices2
                     },
                     "hotelPrice": hotelPrice
                 }]

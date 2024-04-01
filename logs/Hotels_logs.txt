@@ -10,3 +10,4 @@ INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hot
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sk hotel", "goundampalayam", 1, 5, 1230, 2345, 5678);
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sk hotel", "goundampalayam", 1, 5, 1230, 2345, 5678);
 INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("samya hotel", "goundampalayam", 1, 5, 1230, 2345, 5678);
+INSERT INTO hotel_info (hotel_name, hotel_address, hotel_city, hotel_rating, hotel_standard_price, hotel_deluxe_price, hotel_suite_price) VALUES ("sdfsd", "adf", 1, 3, 12, 1232, 234);
