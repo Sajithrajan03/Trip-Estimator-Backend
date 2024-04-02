@@ -144,7 +144,7 @@ module.exports = {
             
             const [avg_economy_price, avg_premium_price, avg_business_price] = flightAvg;
             const flightAvg_prices2 = (parseInt(avg_economy_price) +  parseInt(avg_premium_price) + parseInt(avg_business_price))/3
-            console.log(typeof avg_economy_price,avg_premium_price,flightAvg_prices2)
+            
             
             await db_connection.query(`UNLOCK TABLES`);
             await db_connection.query(`LOCK TABLES hotel_info READ`);
@@ -157,7 +157,7 @@ module.exports = {
                              WHERE hotel_city =  ?`;
 
             if (req.body.hotel_rating) {
-                const hotelRating = parseInt(req.body.hotel_rating, 10);
+                const hotelRating = 5
                 hotelQuery += ` AND hotel_rating <= ${hotelRating} GROUP BY hotel_rating order by hotel_rating;`;
             }
             const hotelAvg_prices = await db_connection.query(
@@ -167,16 +167,14 @@ module.exports = {
             
              
             let hotelPrice = {
-               "3" : {
-                "standard":  null,
-                "deluxe": null,
-                "suite": null
-               } 
+               
             };
+             
         if (hotelAvg_prices[0].length!=0){
         hotelAvg_prices[0].forEach(row => {
             
             const rating = row.hotel_rating;
+             
             hotelPrice[rating] = {
                 "standard": row.avg_standard_price || null,
                 "deluxe": row.avg_deluxe_price || null,
