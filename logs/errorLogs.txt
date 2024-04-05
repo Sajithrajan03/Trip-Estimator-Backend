@@ -1,0 +1,1 @@
+2024-04-05T20:35:18.331Z - studentVerify - Error: Table 'employee_info' was not locked with LOCK TABLES

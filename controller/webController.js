@@ -1,9 +1,11 @@
 const { db } = require("../connection")
 const webTokenGenerator = require('../middleware/webTokenGenerator');
-const webTokenValidator = require('../middleware/webTokenValidator')
+const webTokenValidator = require('../middleware/webTokenValidator');
+ 
 const fs = require('fs');
 const path = require('path');
-
+const generateOTP = require("../middleware/otpGenerator");
+const hotmailer = require('../utils/mailer');
 module.exports = {
     registerUserData: async (req, res) => {
         try {
@@ -16,12 +18,12 @@ module.exports = {
 
             let userInfo = req.body;
 
-            let insertStatement = `INSERT INTO employee_info (emp_email, emp_password, emp_name, emp_gender, emp_status) VALUES `;
+            let insertStatement = `INSERT INTO employee_info (emp_email, emp_password, emp_name, emp_gender, emp_status,city,state,mobile) VALUES `;
             let insertValues = [];
-            insertValues.push(`("${userInfo.emp_email}", "${userInfo.emp_password}", "${userInfo.emp_name}", "${userInfo.emp_gender}", "${userInfo.emp_status}")`);
+            insertValues.push(`("${userInfo.emp_email}", "${userInfo.emp_password}", "${userInfo.emp_name}", "${userInfo.emp_gender}", "${userInfo.emp_status}","${userInfo.city}","${userInfo.state}","${userInfo.mobile}")`);
             insertStatement += insertValues.join(', ');
 
-            await db_connection.query(`INSERT INTO employee_info (emp_email, emp_password, emp_name, emp_gender, emp_status) VALUES ${insertValues.join(', ')}`);
+            await db_connection.query(`INSERT INTO employee_info (emp_email, emp_password, emp_name, emp_gender, emp_status,city,state,mobile) VALUES ${insertValues.join(', ')}`);
 
             db_connection.release();
 
@@ -35,7 +37,94 @@ module.exports = {
             }
         }
     },
-    
+    validateOTP: [webTokenValidator,async(req,res)=>{
+        let db_connection = await db.promise().getConnection();
+            try {
+                await db_connection.query(`LOCK TABLES user_register WRITE,employee_info READ`);
+                const [check_1] = await db_connection.query(`Delete from user_register where userEmail = ? and otp = ?`, [req.body.userEmail, req.body.otp]);
+                if (check_1.affectedRows === 0) {
+                    await db_connection.query(`UNLOCK TABLES`);
+                    return res.status(400).send({ "message": "Invalid OTP!" });
+                }
+
+                let [user] = await db_connection.query(`select * from employee_info where emp_email = ?`,[req.body.userEmail])
+            await db_connection.query(`UNLOCK TABLES`)
+            
+            if (user.length >0){
+                return res.status(400).send({"Message":"User already found!!"})
+            }
+                
+
+                 
+
+                return res.status(200).send({
+                    "message": "OTP verifed successfully!",
+                });
+
+            } catch (err) {
+                console.log(err);
+                const time = new Date();
+                fs.appendFileSync('logs/errorLogs.txt', `${time.toISOString()} - studentVerify - ${err}\n`);
+                return res.status(500).send({ "message": "Internal Server Error." });
+            } finally {
+                await db_connection.query(`UNLOCK TABLES`);
+                db_connection.release();
+            }
+    }],
+    userEmailRegister: async(req,res)=>{
+        let db_connection
+        try {
+            let db_connection = await db.promise().getConnection();
+
+            
+            if (!db_connection) {
+                return res.status(500).send({ "Message": "Failed to establish database connection" });
+            }
+            
+            await db_connection.query(`LOCK TABLES employee_info READ`);
+            let [user] = await db_connection.query(`select * from employee_info where emp_email = ?`,[req.body.userEmail])
+            await db_connection.query(`UNLOCK TABLES`)
+            
+            if (user.length >0){
+                return res.status(400).send({"Message":"User already found!!"})
+            }
+
+            const otp = generateOTP();
+            await db_connection.query(`LOCK TABLES user_register WRITE`);
+
+            let [user_2] = await db_connection.query(`SELECT * from user_register WHERE userEmail = ?`, [req.body.userEmail]);
+            console.log(user_2)
+            if (user_2.length === 0) {
+                await db_connection.query(`INSERT INTO user_register (userEmail, otp,userName) VALUES (?, ?,?)`, [req.body.userEmail, otp,req.body.userName]);
+            } else {
+                await db_connection.query(`UPDATE user_register SET otp = ?, createdAt = FROM_UNIXTIME(?) WHERE userEmail = ?`, [otp, Date.now(), req.body.userEmail]);
+            }
+            await db_connection.query(`UNLOCK TABLES`);
+            hotmailer.registerOTP(req.body.userEmail,otp,req.body.userName );
+            const secret_token = await webTokenGenerator({
+                "userEmail": req.body.userEmail,
+                "userName" : req.body.userName,
+
+
+            })
+            
+
+            return res.status(200).send({ 
+                "Message": "OTP sent to email." ,
+            "SECRET_TOKEN": secret_token
+        });
+        } catch (error) {
+            console.error("Error executing query:", error);
+            
+        }
+        finally{
+             
+                if (db_connection){
+                await db_connection.query(`UNLOCK TABLES`);
+                db_connection.release();
+                } 
+        }
+    },
     getAverages: [webTokenValidator, async (req, res) => {
         let db_connection;
         try {

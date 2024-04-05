@@ -11,6 +11,8 @@ router.post("/getAverages",webController2.getAverages)
 router.post("/enterTripDetails",webController2.enterTripDetails)
 router.get("/getDashboardDetails",webController2.getDashboardDetails)
 router.post("/updateTripDetails",webController2.updateTripDetails)
+router.post("/userEmailRegister",webController2.userEmailRegister )
+router.post("/validateOTP",webController2.validateOTP)
 
 router.get('/test', webController.test);
 router.post('/registerHotelData', webController.registerHotelData);

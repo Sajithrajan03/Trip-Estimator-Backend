@@ -6,9 +6,19 @@ CREATE TABLE employee_info (
     emp_name varchar(255) NOT NULL ,
     emp_gender char(1) NULL,
     emp_status CHAR(1) NOT NULL,
+    city varchar(255) NOT NULL,
+    state varchar(255) NOT NULL,
+    mobile varchar(255) NOT NULL,
     CONSTRAINT CHK_STATUS CHECK (emp_status='0' OR emp_status='1' or emp_status='2' OR emp_status='3')
 
 );
+
+CREATE TABLE user_register(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    userEmail VARCHAR(255) NOT NULL UNIQUE,
+    userName varchar(255) NOT NULL,
+    otp varchar(255) NOT NULL
+)
 
 --EMPSTATUS - 
 --  0 BANNED
