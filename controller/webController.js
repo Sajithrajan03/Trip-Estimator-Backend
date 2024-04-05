@@ -44,7 +44,7 @@ module.exports = {
                 const [check_1] = await db_connection.query(`Delete from user_register where userEmail = ? and otp = ?`, [req.body.userEmail, req.body.otp]);
                 if (check_1.affectedRows === 0) {
                     await db_connection.query(`UNLOCK TABLES`);
-                    return res.status(400).send({ "message": "Invalid OTP!" });
+                    return res.status(400).send({ "Message": "Invalid OTP!" });
                 }
 
                 let [user] = await db_connection.query(`select * from employee_info where emp_email = ?`,[req.body.userEmail])
@@ -58,14 +58,14 @@ module.exports = {
                  
 
                 return res.status(200).send({
-                    "message": "OTP verifed successfully!",
+                    "Message": "OTP verifed successfully!",
                 });
 
             } catch (err) {
                 console.log(err);
                 const time = new Date();
                 fs.appendFileSync('logs/errorLogs.txt', `${time.toISOString()} - studentVerify - ${err}\n`);
-                return res.status(500).send({ "message": "Internal Server Error." });
+                return res.status(500).send({ "Message": "Internal Server Error." });
             } finally {
                 await db_connection.query(`UNLOCK TABLES`);
                 db_connection.release();
@@ -100,6 +100,7 @@ module.exports = {
                 await db_connection.query(`UPDATE user_register SET otp = ?, createdAt = FROM_UNIXTIME(?) WHERE userEmail = ?`, [otp, Date.now(), req.body.userEmail]);
             }
             await db_connection.query(`UNLOCK TABLES`);
+            db_connection.release()
             hotmailer.registerOTP(req.body.userEmail,otp,req.body.userName );
             const secret_token = await webTokenGenerator({
                 "userEmail": req.body.userEmail,

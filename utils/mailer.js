@@ -32,7 +32,7 @@ transporter.sendMail(options, (error, info) => {
 }
 const registerOTP = (to,otp,userName) =>{
      
-    const htmlTemplate = TEMPLATE_OTP(otp, userName);
+    try{const htmlTemplate = TEMPLATE_OTP(otp, userName);
     const transporter = nodemailer.createTransport({
       service : "hotmail",
       auth : {
@@ -58,7 +58,12 @@ const registerOTP = (to,otp,userName) =>{
       } else {
           console.log('Email sent:', info.response);
       }
-  });
+      return;
+  });}
+  catch(err){
+    console.log(err)
+  }
+  return;
   }
   
 module.exports = {sendMail,registerOTP};
