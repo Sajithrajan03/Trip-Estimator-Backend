@@ -72,3 +72,31 @@ CREATE TABLE flight_info (
 		CONSTRAINT UQ_FLIGHT UNIQUE (flight_name ,flight_route),
     CONSTRAINT FK_ROUTE_ID FOREIGN KEY (flight_route) REFERENCES route_info(route_id)
 );
+
+CREATE TABLE food_info (
+    food_expense_id int PRIMARY KEY AUTO_INCREMENT,
+    food_expense_city int NOT NULL,
+    food_price_veg, int NOT NULL,
+    food_price_nonveg int NOT NULL,
+    CONSTRAINT FK_FOOD_CITY FOREIGN KEY (food_expense_city) REFERENCES cities(city_id)
+);
+CREATE TABLE miscellaneous_info (
+    miscellaneous_expense_id int PRIMARY KEY AUTO_INCREMENT,
+    miscellaneous_expense_city int NOT NULL,
+    miscellaneous_price int NOT NULL,
+    CONSTRAINT FK_MISCELLANEOUS_CITY FOREIGN KEY (miscellaneous_expense_city) REFERENCES cities(city_id)
+);
+
+INSERT INTO food_info(food_expense_city,food_price_veg,food_price_nonveg) VALUES (1,1000,2000);
+INSERT INTO food_info(food_expense_city,food_price_veg,food_price_nonveg) VALUES (2,2000,3000);
+INSERT INTO food_info(food_expense_city,food_price_veg,food_price_nonveg) VALUES (3,3000,4000);
+INSERT INTO food_info(food_expense_city,food_price_veg,food_price_nonveg) VALUES (4,4000,5000);
+INSERT INTO food_info(food_expense_city,food_price_veg,food_price_nonveg) VALUES (5,5000,6000);
+INSERT INTO food_info(food_expense_city,food_price_veg,food_price_nonveg) VALUES (6,6000,7000);
+
+INSERT INTO miscellaneous_info(miscellaneous_expense_city,miscellaneous_price) VALUES (1,1000);
+INSERT INTO miscellaneous_info(miscellaneous_expense_city,miscellaneous_price) VALUES (2,2000);
+INSERT INTO miscellaneous_info(miscellaneous_expense_city,miscellaneous_price) VALUES (3,3000);
+INSERT INTO miscellaneous_info(miscellaneous_expense_city,miscellaneous_price) VALUES (4,4000);
+INSERT INTO miscellaneous_info(miscellaneous_expense_city,miscellaneous_price) VALUES (5,5000);
+INSERT INTO miscellaneous_info(miscellaneous_expense_city,miscellaneous_price) VALUES (6,6000);

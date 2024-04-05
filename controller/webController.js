@@ -35,6 +35,7 @@ module.exports = {
             }
         }
     },
+    
     getAverages: [webTokenValidator, async (req, res) => {
         let db_connection;
         try {
@@ -54,7 +55,7 @@ module.exports = {
             await db_connection.query(`LOCK TABLES bus_info READ, route_info READ`);
 
             const busAvg_prices = await db_connection.query(
-                `SELECT AVG(bus_price) AS avg_price 
+                `SELECT bus_ac,bus_sleeper,AVG(bus_price) AS avg_price 
                  FROM bus_info 
                  WHERE bus_route IN (
                      SELECT route_id 
@@ -65,6 +66,7 @@ module.exports = {
                  ORDER BY bus_ac, bus_sleeper;`,
                 [startCityInt, endCityInt]
             );
+            let noac_nosleeper, noac_sleeper, ac_nosleeper, ac_sleeper, busAverage;
             const busAvg_prices2 = await db_connection.query(
                 `SELECT AVG(bus_price) AS avg_price 
                  FROM bus_info 
@@ -77,18 +79,26 @@ module.exports = {
                 [startCityInt, endCityInt]
             );
 
-            const busAvg_arr = busAvg_prices.map(subArray => {
-                return subArray.map(item => {
+            busAvg_prices[0].forEach((busAvg) => {
+                console.log(busAvg)
+                if (busAvg.bus_ac === 0 && busAvg.bus_sleeper === 0) {
+                  noac_nosleeper = busAvg.avg_price;
+                } else if (busAvg.bus_ac === 0 && busAvg.bus_sleeper === 1) {
+                  noac_sleeper = busAvg.avg_price;
+                } else if (busAvg.bus_ac === 1 && busAvg.bus_sleeper === 0) {
+                  ac_nosleeper = busAvg.avg_price;
+                } else if (busAvg.bus_ac == 1 && busAvg.bus_sleeper == 1) {
+                  ac_sleeper = busAvg.avg_price;
+                }
+              });
 
-                    return item.avg_price;
-                });
-            });
-
+            
+            
             const busAvg = {
-                "noac_nosleeper": busAvg_arr[0][0],
-                "noac_sleeper": busAvg_arr[0][1],
-                "ac_nosleeper": busAvg_arr[0][2],
-                "ac_sleeper": busAvg_arr[0][3],
+                "noac_nosleeper": noac_nosleeper,
+                "noac_sleeper": noac_sleeper,
+                "ac_nosleeper": ac_nosleeper,
+                "ac_sleeper": ac_sleeper,
                 "busAverage": busAvg_prices2[0][0].avg_price
             }
             await db_connection.query(`UNLOCK TABLES`);
@@ -163,14 +173,11 @@ module.exports = {
             const hotelAvg_prices = await db_connection.query(
                 hotelQuery,
                 [endCityInt]
-            );
-            
-             
+            ); 
             let hotelPrice = {
                
             };
-             
-        if (hotelAvg_prices[0].length!=0){
+            if (hotelAvg_prices[0].length!=0){
         hotelAvg_prices[0].forEach(row => {
             
             const rating = row.hotel_rating;
@@ -181,13 +188,33 @@ module.exports = {
                 "suite": row.avg_suite_price || null
             };
         });}
-         
+       
+        await db_connection.query(`UNLOCK TABLES`);
 
+        await db_connection.query(`LOCK TABLES food_info READ`);
+
+            let foodQuery = `SELECT food_price_veg as vegFoodAverage,
+                                    food_price_nonveg as nonVegFoodAverage
+                                 FROM food_info 
+                             WHERE food_expense_city =  ?`;
+            const foodAvg_prices = await db_connection.query(
+                foodQuery,
+                [endCityInt]
+            ); 
             
-
+        await db_connection.query(`UNLOCK TABLES`);
+        await db_connection.query(`LOCK TABLES miscellaneous_info READ`);
+    
+            let miscellaneousQuery = `SELECT miscellaneous_price as miscellaneousAverage
+                                 FROM miscellaneous_info 
+                             WHERE miscellaneous_expense_city =  ?`;
+            const miscellaneousAvg_prices = await db_connection.query(
+                miscellaneousQuery,
+                [endCityInt]
+            ); 
             
+        await db_connection.query(`UNLOCK TABLES`);
 
-            await db_connection.query(`UNLOCK TABLES`);
             await db_connection.query(`LOCK TABLES car_travel_info READ, route_info READ`);
 
             const carAvg_prices = await db_connection.query(
@@ -294,7 +321,9 @@ module.exports = {
                         "business": avg_business_price,
                         "flightAverage" : flightAvg_prices2
                     },
-                    "hotelPrice": hotelPrice
+                    "hotelPrice": hotelPrice,
+                    "foodPrice" : foodAvg_prices[0][0],
+                    "miscellaneousPrice" : miscellaneousAvg_prices[0][0]
                 }]
             });
         } catch (err) {
