@@ -35,8 +35,14 @@ module.exports = {
             } else {
                 return res.status(500).send({ "Message": "Internal server error" });
             }
-        }
+        }finally{
+             
+            if (db_connection){
+            await db_connection.query(`UNLOCK TABLES`);
+            db_connection.release();
+            } }
     },
+
     validateOTP: [webTokenValidator,async(req,res)=>{
         let db_connection = await db.promise().getConnection();
             try {
@@ -478,6 +484,12 @@ module.exports = {
                 console.error(err);
                 return res.status(500).send({ "Message": "Internal Server Error" });
             }
+            finally{
+             
+                if (db_connection){
+                await db_connection.query(`UNLOCK TABLES`);
+                db_connection.release();
+                } }
         }
     ],
     getDashboardDetails: [
@@ -520,6 +532,12 @@ module.exports = {
                 console.error(err);
                 return res.status(500).send({ "Message": "Internal Server Error" });
             }
+            finally{
+             
+                if (db_connection){
+                await db_connection.query(`UNLOCK TABLES`);
+                db_connection.release();
+                } }
         }
     ],
 
@@ -570,8 +588,120 @@ module.exports = {
                 console.error(err);
                 return res.status(500).send({ "Message": "Internal Server Error" });
             }
+            finally{
+             
+                if (db_connection){
+                await db_connection.query(`UNLOCK TABLES`);
+                db_connection.release();
+                } }
         }
-    ]
+    ],
+    getEmployeeTrips: [
+        async (req, res) => {
+            let db_connection;
+            try {
+                db_connection = await db.promise().getConnection();
+    
+                if (!db_connection) {
+                    return res.status(500).send({ "Message": "Failed to establish database connection" });
+                }
+    
+                const { emp_email } = req.body;
+    
+                // Check if the employee exists
+                const [employee] = await db_connection.query(`
+                    SELECT emp_id FROM employee_info WHERE emp_email = ?`, [emp_email]);
+    
+                if (employee.length === 0) {
+                    return res.status(404).send({ "Message": "Employee not found" });
+                }
+    
+                // Retrieve trips associated with the employee
+                const employeeTrips = await db_connection.query(`
+                    SELECT 
+                        trip_info.*, 
+                        start_city.city_name AS start_city_name, 
+                        end_city.city_name AS end_city_name
+                    FROM 
+                        trip_info
+                    JOIN 
+                        cities AS start_city ON trip_info.start_city = start_city.city_id
+                    JOIN 
+                        cities AS end_city ON trip_info.end_city = end_city.city_id
+                    WHERE 
+                        trip_info.emp_id = ?
+                `, [employee[0].emp_id]);
+    
+                db_connection.release();
+    
+                return res.status(200).send({
+                    "Message": employeeTrips[0]
+                });
+            } catch (err) {
+                console.error(err);
+                return res.status(500).send({ "Message": "Internal Server Error" });
+            } finally {
+                if (db_connection) {
+                    await db_connection.query(`UNLOCK TABLES`);
+                    db_connection.release();
+                }
+            }
+        }
+    ],
+    getProfile : async(req,res)=>{
+        try {
+            const requiredFields = ["trip_id", "trip_status", "trip_amount", "admin_message"];
+            for (const field of requiredFields) {
+                if (!req.body[field]) {
+                    return res.status(400).send({ "Message": `${field.replace('_', ' ')} is required` });
+                }
+            }
+
+
+            const { trip_id, trip_status, trip_amount, admin_message } = req.body;
+
+
+
+            let db_connection = await db.promise().getConnection();
+
+            if (!db_connection) {
+                return res.status(500).send({ "Message": "Failed to establish database connection" });
+            }
+
+            if (req.body.accountStatus == "0" || req.body.accountStatus == "1") {
+                return res.status(401).send({ "Message": "Unauthorized" });
+            }
+
+            // Check if the trip exists
+            const [tripExists] = await db_connection.query('SELECT * FROM trip_info WHERE trip_id = ?', [trip_id]);
+
+            if (tripExists.length === 0) {
+                return res.status(404).send({ "Message": "Trip not found" });
+            }
+
+            // Update trip details
+            await db_connection.query(`UPDATE trip_info SET trip_status = ?, trip_amount = ?, admin_message = ? WHERE trip_id = ?`,
+                [trip_status, trip_amount, admin_message, trip_id]);
+
+            db_connection.release();
+
+            return res.status(200).send({
+                "Message": "Trip details updated successfully!"
+            });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).send({ "Message": "Internal Server Error" });
+        }
+        finally{
+            
+            if (db_connection){
+            await db_connection.query(`UNLOCK TABLES`);
+            db_connection.release();
+            } }
+           
+        
+    }
+    
 
 
 

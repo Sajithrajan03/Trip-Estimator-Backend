@@ -13,6 +13,8 @@ router.get("/getDashboardDetails",webController2.getDashboardDetails)
 router.post("/updateTripDetails",webController2.updateTripDetails)
 router.post("/userEmailRegister",webController2.userEmailRegister )
 router.post("/validateOTP",webController2.validateOTP)
+router.post("/getEmployeeTrips",webController2.getEmployeeTrips)
+router.post("/getprofile",webController2.getProfile)
 
 router.get('/test', webController.test);
 router.post('/registerHotelData', webController.registerHotelData);
