@@ -467,9 +467,9 @@ module.exports = {
                 const emp_id = employeeRow[0].emp_id;
 
                 // Insert trip details
-                await db_connection.query(`INSERT INTO trip_info (emp_id, start_city, end_city, travel_start_date, travel_end_date, transport_mode, transport_estimate, transport_amount, hotel_type, hotel_estimate, hotel_amount, food_estimate, food_amount, miscellaneous_estimate, miscellaneous_amount, total_estimate, total_amount, travel_reason, trip_status, trip_estimate, trip_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                await db_connection.query(`INSERT INTO trip_info (emp_id, emp_email,start_city, end_city, travel_start_date, travel_end_date, transport_mode, transport_estimate, transport_amount, hotel_type, hotel_estimate, hotel_amount, food_estimate, food_amount, miscellaneous_estimate, miscellaneous_amount, total_estimate, total_amount, travel_reason, trip_status, trip_estimate, trip_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)`,
                     [
-                        emp_id, req.body.start_city, req.body.end_city, req.body.travel_start_date, req.body.travel_end_date,
+                        emp_id,req.body.emp_email, req.body.start_city, req.body.end_city, req.body.travel_start_date, req.body.travel_end_date,
                         req.body.transport_mode, req.body.transport_estimate, req.body.transport_amount, req.body.hotel_type,
                         req.body.hotel_estimate, req.body.hotel_amount, req.body.food_estimate, req.body.food_amount,
                         req.body.miscellaneous_estimate, req.body.miscellaneous_amount, req.body.total_estimate,
@@ -584,7 +584,7 @@ module.exports = {
                 await db_connection.query(`UPDATE trip_info SET trip_status = ?, total_amount = ?, admin_message = ? WHERE trip_id = ?`,
                     [trip_status, trip_amount, admin_message, trip_id]);
                 
-                hotmailer.updateTripStatus(req.body.userEmail,trip_id,req.body.travel,req.body.days,trip_status,trip_amount,req.body.userName);
+                hotmailer.updateTripStatus(req.body.toemail,trip_id,req.body.travel,req.body.days,trip_status,trip_amount,req.body.empName);
                 
                 db_connection.release();
 
