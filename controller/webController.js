@@ -8,8 +8,9 @@ const generateOTP = require("../middleware/otpGenerator");
 const hotmailer = require('../utils/mailer');
 module.exports = {
     registerUserData: async (req, res) => {
+        let db_connection
         try {
-            let db_connection = await db.promise().getConnection();
+            db_connection = await db.promise().getConnection();
 
             // Check if the connection is successful
             if (!db_connection) {
@@ -80,7 +81,7 @@ module.exports = {
     userEmailRegister: async(req,res)=>{
         let db_connection
         try {
-            let db_connection = await db.promise().getConnection();
+            db_connection = await db.promise().getConnection();
 
             
             if (!db_connection) {
@@ -438,6 +439,7 @@ module.exports = {
     enterTripDetails: [
         webTokenValidator,
         async (req, res) => {
+            let db_connection
             try {
 
                 const requiredFields = ["emp_email", "travel_start_date", "travel_end_date", "transport_mode", "transport_estimate", "transport_amount", "hotel_type", "hotel_estimate", "hotel_amount", "food_estimate", "food_amount", "miscellaneous_estimate", "miscellaneous_amount", "total_estimate", "total_amount", "travel_reason", "trip_estimate", "trip_amount"];
@@ -447,7 +449,7 @@ module.exports = {
                     }
                 }
 
-                let db_connection = await db.promise().getConnection();
+                db_connection = await db.promise().getConnection();
 
                 if (!db_connection) {
                     return res.status(500).send({ "Message": "Failed to establish database connection" });
@@ -474,7 +476,8 @@ module.exports = {
                         req.body.total_amount, req.body.travel_reason, 0,
                         req.body.trip_estimate, req.body.trip_amount
                     ]);
-
+                    hotmailer.createTrip(req.body.userEmail,req.body.travel,req.body.days,req.body.userName);
+                     
                 db_connection.release();
 
                 return res.status(200).send({
@@ -495,8 +498,9 @@ module.exports = {
     getDashboardDetails: [
         webTokenValidator,
         async (req, res) => {
+            let db_connection 
             try {
-                let db_connection = await db.promise().getConnection();
+                db_connection = await db.promise().getConnection();
 
                 if (!db_connection) {
                     return res.status(500).send({ "Message": "Failed to establish database connection" });
@@ -545,6 +549,7 @@ module.exports = {
     updateTripDetails: [
         webTokenValidator,
         async (req, res) => {
+            let db_connection
             try {
                 const requiredFields = ["trip_id", "trip_status", "trip_amount", "admin_message"];
                 for (const field of requiredFields) {
@@ -558,7 +563,7 @@ module.exports = {
 
 
 
-                let db_connection = await db.promise().getConnection();
+                db_connection = await db.promise().getConnection();
 
                 if (!db_connection) {
                     return res.status(500).send({ "Message": "Failed to establish database connection" });
@@ -574,11 +579,13 @@ module.exports = {
                 if (tripExists.length === 0) {
                     return res.status(404).send({ "Message": "Trip not found" });
                 }
-
+                 
                 // Update trip details
-                await db_connection.query(`UPDATE trip_info SET trip_status = ?, trip_amount = ?, admin_message = ? WHERE trip_id = ?`,
+                await db_connection.query(`UPDATE trip_info SET trip_status = ?, total_amount = ?, admin_message = ? WHERE trip_id = ?`,
                     [trip_status, trip_amount, admin_message, trip_id]);
-
+                
+                hotmailer.updateTripStatus(req.body.userEmail,trip_id,req.body.travel,req.body.days,trip_status,trip_amount,req.body.userName);
+                
                 db_connection.release();
 
                 return res.status(200).send({
@@ -649,44 +656,29 @@ module.exports = {
         }
     ],
     getProfile : async(req,res)=>{
+        let db_connection
         try {
-            const requiredFields = ["trip_id", "trip_status", "trip_amount", "admin_message"];
-            for (const field of requiredFields) {
-                if (!req.body[field]) {
-                    return res.status(400).send({ "Message": `${field.replace('_', ' ')} is required` });
-                }
-            }
-
-
-            const { trip_id, trip_status, trip_amount, admin_message } = req.body;
-
-
-
-            let db_connection = await db.promise().getConnection();
+            const { emp_email} = req.body;
+             db_connection = await db.promise().getConnection();
 
             if (!db_connection) {
                 return res.status(500).send({ "Message": "Failed to establish database connection" });
             }
 
-            if (req.body.accountStatus == "0" || req.body.accountStatus == "1") {
-                return res.status(401).send({ "Message": "Unauthorized" });
-            }
-
             // Check if the trip exists
-            const [tripExists] = await db_connection.query('SELECT * FROM trip_info WHERE trip_id = ?', [trip_id]);
+            const [profileExists] = await db_connection.query('SELECT emp_id,emp_email,emp_name,emp_gender,emp_status, city,state,mobile FROM employee_info WHERE emp_email = ?', [emp_email]);
 
-            if (tripExists.length === 0) {
-                return res.status(404).send({ "Message": "Trip not found" });
+            if (profileExists.length === 0) {
+                return res.status(404).send({ "Message": "Employee not found" });
             }
 
             // Update trip details
-            await db_connection.query(`UPDATE trip_info SET trip_status = ?, trip_amount = ?, admin_message = ? WHERE trip_id = ?`,
-                [trip_status, trip_amount, admin_message, trip_id]);
+             
 
             db_connection.release();
 
             return res.status(200).send({
-                "Message": "Trip details updated successfully!"
+                "Message": profileExists
             });
         } catch (err) {
             console.error(err);
