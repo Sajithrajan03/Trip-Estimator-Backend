@@ -33,8 +33,11 @@ transporter.sendMail(options, (error, info) => {
 });
 }
 const registerOTP = (to,otp,userName) =>{
-     
-    try{const htmlTemplate = TEMPLATE_OTP(otp, userName);
+    
+
+    try{
+        cid = "unique@kreata.ee"  
+         
     const transporter = nodemailer.createTransport({
       service : "hotmail",
       auth : {
@@ -50,7 +53,12 @@ const registerOTP = (to,otp,userName) =>{
       from : process.env.MAIL_USERNAME, 
       to, 
       subject :"Trip Estimator - OTP verification",
-      html : htmlTemplate
+      html : TEMPLATE_OTP(otp, userName),
+          attachments: [{
+            filename: 'logo_.png',
+            path: '/home/azureuser/Trip-Estimator-Backend/utils/logo_.png',
+            cid: 'unique@kreata.ee' //same cid value as in the html img src
+        }]
   }
   
  
