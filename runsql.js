@@ -3,7 +3,7 @@ const { db } = require("./connection");
 
 const runSQL = async () => {
     try {
-        const data = await fs.promises.readFile('./Schema/routes.sql', 'utf8');
+        const data = await fs.promises.readFile('mydb.sql', 'utf8');
         const statements = data.split(';').filter(statement => statement.trim() !== '');
 
         for (const statement of statements) {
