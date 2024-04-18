@@ -8,8 +8,11 @@ const cors = require('cors');
 require('dotenv').config();
 
 // Respond to GET request with "hi"
-app.use(cors())
+
 app.use(express.json());
+app.use(cors({
+  origin: 'http://172.212.104.236:5000'
+}));
 app.use("/api",userWebRouter)
 
 
