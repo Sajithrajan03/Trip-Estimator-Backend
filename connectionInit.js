@@ -4,7 +4,7 @@ const establishConnection = () => {
 
     const db = mysql.createConnection({
         host: 'localhost',
-        user: 'root',
+        user: 'sajith',
         password: 'password', 
         port: "3306",
         database: 'TripEstimator',
