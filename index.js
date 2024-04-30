@@ -11,7 +11,8 @@ require('dotenv').config();
 
 app.use(express.json());
 app.use(cors({
-  origin: 'http://172.212.104.236:5000'
+  origin: 'http://localhost:5000',
+  // Other options as needed
 }));
 app.use("/api",userWebRouter)
 
