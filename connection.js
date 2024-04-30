@@ -5,7 +5,7 @@ const connectionLimit = os.cpus().length;
 // console.log(connectionLimit)
 const db =  mysql.createPool({
     host: 'localhost',
-    user: 'root',
+    user: 'sajith',
     password: 'password', 
     port: "3306",
     database: 'TripEstimator',
