@@ -10,16 +10,13 @@ require('dotenv').config();
 // Respond to GET request with "hi"
 
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:5000',
-  // Other options as needed
-}));
+app.use(cors());
 app.use("/api",userWebRouter)
 
 
 
 // Start the server
-const PORT = 3002;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
